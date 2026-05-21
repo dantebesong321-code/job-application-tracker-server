@@ -84,7 +84,7 @@ router.post("/login", async (req, res, next) => {
     const isPasswordMatch = await bcrypt.compare(password, foundUser.password);
     if (!isPasswordMatch) {
       res.status(400).json({ errorMessage: "the password is not correct" });
-      return; // this means, stop executing the route
+      return;
     }
 
     // we will have authenticated the user and we can create that token...
@@ -93,7 +93,7 @@ router.post("/login", async (req, res, next) => {
       _id: foundUser._id,
       email: foundUser.email,
       // if we had roles, then they would need to be here.
-      role: foundUser.role,
+      // role: foundUser.role,
     };
 
     const tokenConfig = {
