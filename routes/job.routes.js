@@ -72,9 +72,9 @@ router.patch("/:jobId", verifyToken, async (req, res) => {
       interviewType: req.body.interviewType,
       status: req.body.status,
       favorite: req.body.favorite,
-      createdBy: req.body.createdBy,
+      createdBy: req.payload._id,
     };
-    const response = await Job.findByIdAndUpdate(req.payload._id, updatedJob, {
+    const response = await Job.findByIdAndUpdate(req.params.jobId, updatedJob, {
       new: true,
     });
 
@@ -91,7 +91,7 @@ router.patch("/:jobId", verifyToken, async (req, res) => {
 // DeleteJob
 router.delete("/:jobId", verifyToken, async (req, res) => {
   try {
-    const response = await Job.findByIdAndDelete(req.payload_id);
+    const response = await Job.findByIdAndDelete(req.params.jobId);
 
     if (!response) {
       return res.status(404).json({

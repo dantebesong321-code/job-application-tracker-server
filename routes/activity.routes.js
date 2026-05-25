@@ -9,7 +9,7 @@ router.post("/", verifyToken, async (req, res, next) => {
     const newActivity = {
       status: req.body.status,
       favorite: req.body.favorite,
-      createdBy: req.body.createdBy,
+      createdBy: req.payload._id,
     };
 
     const response = await Activity.create(newActivity);
@@ -32,7 +32,9 @@ router.patch("/:activityId", async (req, res) => {
     status: req.body.status,
     favorite: req.body.favorite,
   };
-  Activity.findByIdAndUpdate(req.payload._id, updatedActivity, { new: true });
+  Activity.findByIdAndUpdate(req.params.activityId, updatedActivity, {
+    new: true,
+  });
   then((response) => {
     console.log(response);
     res.sendStatus(202);
@@ -44,7 +46,7 @@ router.patch("/:activityId", async (req, res) => {
 // DeleteActivity
 router.delete("/:activityId", async (req, res) => {
   try {
-    const response = await Activity.findByIdAndDelete(req.payload._id);
+    const response = await Activity.findByIdAndDelete(req.params.activityId);
 
     if (!response) {
       return res.status(404).json({
