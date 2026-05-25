@@ -1,14 +1,17 @@
 const { Schema, model } = require("mongoose");
+const mongoose = require("mongoose");
 
 const activitySchema = new Schema(
   {
-    createdBy: { userId },
-
     status: {
-      enum: ["pending", "accepted", "interviewing", "ghosted", "rejected"],
+      enum: ["applied", "offered", "accepted", "interviewing", "rejected"],
     },
     favorite: {
       type: Boolean,
+    },
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
     },
   },
 

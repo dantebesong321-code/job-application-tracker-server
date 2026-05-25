@@ -1,4 +1,5 @@
 const { Schema, model } = require("mongoose");
+const mongoose = require("mongoose");
 
 const jobSchema = new Schema(
   {
@@ -18,17 +19,26 @@ const jobSchema = new Schema(
     },
 
     status: {
-      enum: ["pending", "accepted", "interviewing", "ghosted", "rejected"],
+      enum: [
+        "pending",
+        "offered",
+        "accepted",
+        "interviewing",
+        "ghosted",
+        "rejected",
+      ],
     },
     favorite: {
       type: Boolean,
     },
     dateCreated: Date,
-    createdBy: {},
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
   },
 
   {
-    // this second object adds extra properties: `createdAt` and `updatedAt`
     timestamps: true,
   },
 );

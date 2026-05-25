@@ -2,7 +2,6 @@ const { Schema, model } = require("mongoose");
 
 const userSchema = new Schema(
   {
-    image: String,
     username: String,
     email: {
       type: String,
@@ -14,6 +13,56 @@ const userSchema = new Schema(
     password: {
       type: String,
       required: [true, "Password is required."],
+    },
+    firstName: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
+    lastName: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    bio: {
+      type: String,
+      default: "",
+      maxlength: 500,
+    },
+
+    avatar: {
+      type: String,
+      default: "",
+    },
+
+    phone: {
+      type: String,
+      default: "",
+    },
+
+    dateOfBirth: {
+      type: Date,
+    },
+
+    gender: {
+      type: String,
+      enum: ["male", "female", "other"],
+    },
+
+    address: {
+      street: String,
+      city: String,
+      state: String,
+      country: String,
+      zipCode: String,
+    },
+
+    socialLinks: {
+      website: String,
+      github: String,
+      linkedin: String,
+      twitter: String,
     },
   },
   {

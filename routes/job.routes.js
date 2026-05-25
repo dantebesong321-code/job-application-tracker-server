@@ -1,35 +1,38 @@
 const router = require("express").Router();
 const Job = require("../models/Job.model");
+const { verifyToken } = require("../middlewares/auth.middlewares");
 
-// createJob
-router.post("/", async (req, res, next) => {
+// GET Jobs
+router.get("/", verifyToken, async (req, res) => {
+  try {
+    console.log("fetching jobs");
+    const createdBy = req.payload._id;
+    const response = await Job.find({ createdBy });
+
+    res.status(200).json(response);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// POST createJob verifyToken
+router.post("/", verifyToken, async (req, res) => {
   console.log(req.body);
   try {
-    const {
-      jobRole,
-      company,
-      location,
-      salary,
-      website,
-      interviewType,
-      status,
-      favorite,
-      createdBy,
-    } = req.body;
-
     const newJob = {
-      jobRole,
-      company,
-      location,
-      salary,
-      website,
-      interviewType,
-      status,
-      favorite,
-      createdBy,
+      jobRole: req.body.jobRole,
+      company: req.body.company,
+      location: req.body.location,
+      salary: req.body.salary,
+      website: req.body.website,
+      interviewType: req.body.interviewType,
+      status: req.body.status,
+      favorite: req.body.favorite,
+      createdBy: req.payload._id,
     };
 
-    const response = await Job.create(newJob);
+    const response = await Job.create(req.payload._id, newJob);
 
     console.log("new job created");
 
@@ -40,20 +43,16 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-// JobDetail
-router.get("/:jobId", async (req, res) => {
+// GET JobDetail
+router.get("/:jobId", verifyToken, async (req, res) => {
   try {
-    const response = await Job.findById(req.params.jobId);
+    console.log(req.params);
 
-    if (!response) {
-      return res.status(404).json({
-        message: "Job not found",
-      });
-    }
+    const response = await Job.findById(req.payload._id);
 
     res.status(200).json(response);
   } catch (error) {
-    console.log(error);
+    next(error);
 
     res.status(500).json({
       message: error.message,
@@ -62,17 +61,22 @@ router.get("/:jobId", async (req, res) => {
 });
 
 // UpdateJob
-router.patch("/:jobId", async (req, res) => {
+router.patch("/:jobId", verifyToken, async (req, res) => {
   try {
-    const response = await Job.findByIdAndUpdate(req.params.jobId, req.body, {
+    const updatedJob = {
+      jobRole: req.body.jobRole,
+      company: req.body.company,
+      location: req.body.location,
+      salary: req.body.salary,
+      website: req.body.website,
+      interviewType: req.body.interviewType,
+      status: req.body.status,
+      favorite: req.body.favorite,
+      createdBy: req.body.createdBy,
+    };
+    const response = await Job.findByIdAndUpdate(req.payload._id, updatedJob, {
       new: true,
     });
-
-    if (!response) {
-      return res.status(404).json({
-        message: "Job not found",
-      });
-    }
 
     res.status(200).json(response);
   } catch (error) {
@@ -85,9 +89,9 @@ router.patch("/:jobId", async (req, res) => {
 });
 
 // DeleteJob
-router.delete("/:jobId", async (req, res) => {
+router.delete("/:jobId", verifyToken, async (req, res) => {
   try {
-    const response = await Job.findByIdAndDelete(req.params.jobId);
+    const response = await Job.findByIdAndDelete(req.payload_id);
 
     if (!response) {
       return res.status(404).json({

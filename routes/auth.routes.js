@@ -32,7 +32,7 @@ router.post("/signup", async (req, res, next) => {
 
   try {
     // email should be unique
-    const foundUser = await User.findOne({ email: email }); // either the user or null
+    const foundUser = await User.findOne({ email: email });
     if (foundUser) {
       res
         .status(400)
@@ -80,20 +80,15 @@ router.post("/login", async (req, res, next) => {
       return;
     }
 
-    // the password should match
     const isPasswordMatch = await bcrypt.compare(password, foundUser.password);
     if (!isPasswordMatch) {
       res.status(400).json({ errorMessage: "the password is not correct" });
       return;
     }
 
-    // we will have authenticated the user and we can create that token...
-
     const payload = {
       _id: foundUser._id,
       email: foundUser.email,
-      // if we had roles, then they would need to be here.
-      // role: foundUser.role,
     };
 
     const tokenConfig = {
@@ -108,7 +103,49 @@ router.post("/login", async (req, res, next) => {
   }
 });
 
-// GET "/api/auth/verify" => Only for frontend purposes. So the frontend know who the owner of the token is.
+// GET userProfile
+router.get("/:userId", verifyToken, async (req, res) => {
+  try {
+    console.log(req.params);
+
+    const response = await User.findById(req.payload._id);
+
+    console.log("user profile");
+
+    res.status(200).json(response);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// PATCH update userProfile verifyToken
+router.patch("/:userId", verifyToken, async (req, res) => {
+  try {
+    const userProfileUpdated = {
+      bio: req.body.bio,
+      avatar: req.body.avatar,
+      gender: req.body.gender,
+      address: req.body.address,
+      socialLinks: req.body.socialLinks,
+    };
+
+    const response = await User.findByIdAndUpdate(
+      req.payload._id,
+      userProfileUpdated,
+      { new: true },
+    );
+
+    console.log("user profile updated");
+
+    res.status(200).json(response);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// GET "/api/auth/verify" => For my frontend purposes.
 router.get("/verify", verifyToken, (req, res) => {
   res.status(200).json({ payload: req.payload });
 });

@@ -8,6 +8,8 @@ function verifyToken(req, res, next) {
     const payload = jwt.verify(authToken, process.env.TOKEN_SECRET);
 
     req.payload = payload;
+
+    next();
   } catch (error) {
     res.status(401).json({ errorMessage: "Token not provided or not valid" });
   }
