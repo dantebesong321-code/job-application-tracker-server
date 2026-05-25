@@ -32,7 +32,7 @@ router.post("/", verifyToken, async (req, res) => {
       createdBy: req.payload._id,
     };
 
-    const response = await Job.create(req.payload._id, newJob);
+    const response = await Job.create(newJob);
 
     console.log("new job created");
 
