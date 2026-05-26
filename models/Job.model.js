@@ -15,23 +15,17 @@ const jobSchema = new Schema(
     salary: String,
     website: String,
     interviewType: {
+      type: String,
       enum: ["virtual", "in-person"],
     },
 
     status: {
-      enum: [
-        "pending",
-        "offered",
-        "accepted",
-        "interviewing",
-        "ghosted",
-        "rejected",
-      ],
+      type: String,
+      enum: ["pending", "offered", "accepted", "interviewing", "rejected"],
     },
     favorite: {
       type: Boolean,
     },
-    dateCreated: Date,
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
