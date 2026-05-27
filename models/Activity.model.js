@@ -6,7 +6,7 @@ const activitySchema = new Schema(
     status: {
       type: String,
       enum: ["applied", "offered", "accepted", "interviewing", "rejected"],
-      require: true,
+      required: true,
     },
     favorite: {
       type: Boolean,
@@ -14,6 +14,16 @@ const activitySchema = new Schema(
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+    },
+
+    activityDate: {
+      type: Date,
+      default: Date.now,
+    },
+
+    jobId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Job",
     },
   },
 

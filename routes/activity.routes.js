@@ -3,28 +3,15 @@ const Activity = require("../models/Activity.model");
 const { verifyToken } = require("../middlewares/auth.middlewares");
 
 // create
-router.post("/", verifyToken, async (req, res, next) => {
-  console.log(req.body);
+router.post("/", verifyToken, async (req, res) => {
   try {
     const newActivity = {
       status: req.body.status,
       favorite: req.body.favorite,
+      activityDate: req.body.activityDate,
+      jobId: req.body.jobId,
       createdBy: req.payload._id,
     };
-
-    // GET activity
-    router.get("/", verifyToken, async (req, res) => {
-      try {
-        console.log("fetching actvity");
-        const createdBy = req.payload._id;
-        const response = await Activity.find({ createdBy });
-
-        res.status(200).json(response);
-      } catch (error) {
-        console.log(error);
-        res.status(500).json({ message: error.message });
-      }
-    });
 
     const response = await Activity.create(newActivity);
 
@@ -33,28 +20,75 @@ router.post("/", verifyToken, async (req, res, next) => {
     res.status(200).json(response);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: error.message });
+
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+});
+
+// GET activities of logged User
+router.get("/", verifyToken, async (req, res) => {
+  try {
+    console.log("fetching activity");
+
+    const createdBy = req.payload._id;
+
+    const response = await Activity.find({ createdBy })
+      .populate("createdBy")
+      .populate("jobId");
+
+    res.status(200).json(response);
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+});
+
+// GET activity for single job created by the user
+router.get("/job/:jobId", verifyToken, async (req, res) => {
+  try {
+    const activities = await Activity.find({
+      jobId: req.params.jobId,
+    })
+      .populate("createdBy")
+      .populate("jobId");
+
+    res.status(200).json(activities);
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      message: error.message,
+    });
   }
 });
 
 //updateActivity
 router.patch("/:activityId", async (req, res) => {
-  console.log(req.params);
-  console.log(req.body);
+  try {
+    const updatedActivity = {
+      status: req.body.status,
+      favorite: req.body.favorite,
+    };
 
-  const updatedActivity = {
-    status: req.body.status,
-    favorite: req.body.favorite,
-  };
-  Activity.findByIdAndUpdate(req.params.activityId, updatedActivity, {
-    new: true,
-  });
-  then((response) => {
-    console.log(response);
-    res.sendStatus(202);
-  }).catch((error) => {
+    const response = await Activity.findByIdAndUpdate(
+      req.params.activityId,
+      updatedActivity,
+      { new: true },
+    );
+
+    res.status(202).json(response);
+  } catch (error) {
     console.log(error);
-  });
+
+    res.status(500).json({
+      message: error.message,
+    });
+  }
 });
 
 // DeleteActivity
@@ -70,7 +104,7 @@ router.delete("/:activityId", async (req, res) => {
 
     res.status(200).json({
       message: "activity deleted successfully",
-      deletedJob: response,
+      deletedActivity: response,
     });
   } catch (error) {
     console.log(error);
