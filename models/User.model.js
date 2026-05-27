@@ -16,13 +16,11 @@ const userSchema = new Schema(
     },
     firstName: {
       type: String,
-      required: true,
       trim: true,
     },
 
     lastName: {
       type: String,
-      required: true,
       trim: true,
     },
     bio: {
@@ -66,7 +64,6 @@ const userSchema = new Schema(
     },
   },
   {
-    // this second object adds extra properties: `createdAt` and `updatedAt`
     timestamps: true,
   },
 );

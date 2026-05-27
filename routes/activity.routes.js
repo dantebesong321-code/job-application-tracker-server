@@ -12,6 +12,20 @@ router.post("/", verifyToken, async (req, res, next) => {
       createdBy: req.payload._id,
     };
 
+    // GET activity
+    router.get("/", verifyToken, async (req, res) => {
+      try {
+        console.log("fetching actvity");
+        const createdBy = req.payload._id;
+        const response = await Activity.find({ createdBy });
+
+        res.status(200).json(response);
+      } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: error.message });
+      }
+    });
+
     const response = await Activity.create(newActivity);
 
     console.log("new activity created");

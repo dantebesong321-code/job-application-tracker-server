@@ -21,7 +21,7 @@ const jobSchema = new Schema(
 
     status: {
       type: String,
-      enum: ["pending", "offered", "accepted", "interviewing", "rejected"],
+      enum: ["Applied", "offered", "accepted", "interviewing", "rejected"],
     },
     favorite: {
       type: Boolean,

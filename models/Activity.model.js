@@ -4,7 +4,9 @@ const mongoose = require("mongoose");
 const activitySchema = new Schema(
   {
     status: {
+      type: String,
       enum: ["applied", "offered", "accepted", "interviewing", "rejected"],
+      require: true,
     },
     favorite: {
       type: Boolean,
