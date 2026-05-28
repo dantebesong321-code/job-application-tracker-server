@@ -12,6 +12,7 @@ const jobSchema = new Schema(
       required: [true, "Input caompy name"],
     },
     location: String,
+    contractType: String,
     salary: String,
     website: String,
     interviewType: {
@@ -23,8 +24,13 @@ const jobSchema = new Schema(
       type: String,
       enum: ["applied", "offered", "accepted", "interviewing", "rejected"],
     },
+    note: String,
     favorite: {
       type: Boolean,
+    },
+    dateCreated: {
+      type: Date,
+      default: Date.now,
     },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,

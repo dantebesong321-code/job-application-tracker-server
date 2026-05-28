@@ -25,9 +25,11 @@ router.post("/", verifyToken, async (req, res) => {
       company: req.body.company,
       location: req.body.location,
       salary: req.body.salary,
+      contractType: req.body.contractType,
       website: req.body.website,
       interviewType: req.body.interviewType,
       status: req.body.status,
+      dateCreated: req.body.dateCreated,
       favorite: req.body.favorite,
       createdBy: req.payload._id,
     };
@@ -48,7 +50,7 @@ router.get("/:jobId", verifyToken, async (req, res) => {
   try {
     console.log(req.params);
 
-    const response = await Job.findById(req.payload._id);
+    const response = await Job.findById(req.params.jobId).populate("createdBy");
 
     res.status(200).json(response);
   } catch (error) {
@@ -68,9 +70,11 @@ router.patch("/:jobId", verifyToken, async (req, res) => {
       company: req.body.company,
       location: req.body.location,
       salary: req.body.salary,
+      contractType: req.body.contractType,
       website: req.body.website,
       interviewType: req.body.interviewType,
       status: req.body.status,
+      dateCreated: req.body.dateCreated,
       favorite: req.body.favorite,
       createdBy: req.payload._id,
     };
