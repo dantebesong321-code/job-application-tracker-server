@@ -123,6 +123,8 @@ router.get("/:userId", verifyToken, async (req, res) => {
 router.patch("/:userId", verifyToken, async (req, res) => {
   try {
     const userProfileUpdated = {
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
       bio: req.body.bio,
       avatar: req.body.avatar,
       gender: req.body.gender,
