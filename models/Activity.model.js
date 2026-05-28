@@ -6,7 +6,6 @@ const activitySchema = new Schema(
     status: {
       type: String,
       enum: ["applied", "offered", "accepted", "interviewing", "rejected"],
-      required: true,
     },
     favorite: {
       type: Boolean,
