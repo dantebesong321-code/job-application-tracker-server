@@ -12,7 +12,10 @@ const jobSchema = new Schema(
       required: [true, "Input caompy name"],
     },
     location: String,
-    contractType: String,
+    contractType: {
+      type: String,
+      enum: ["Permanent contract", "Part-time contract"],
+    },
     salary: String,
     website: String,
     interviewType: {
