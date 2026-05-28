@@ -9,7 +9,7 @@ const jobSchema = new Schema(
     },
     company: {
       type: String,
-      required: [true, "Input caompy name"],
+      required: [true, "Input company name"],
     },
     location: String,
     contractType: {
