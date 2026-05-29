@@ -14,7 +14,7 @@ const jobSchema = new Schema(
     location: String,
     contractType: {
       type: String,
-      enum: ["Permanent", "Temporal"],
+      enum: ["Permanent contract", "Temporal contract"],
     },
     salary: String,
     website: String,
